@@ -26,8 +26,8 @@ public class FleeMovement : MonoBehaviour
     {
         if (Vector3.Distance(target.transform.position, transform.position) < 1.0f)
         {
-            //index = Random.Range(0, points.Length);
-            index++;
+            index = Random.Range(0, points.Length);
+            //index++;
 
             if (index >= points.Length)
             {

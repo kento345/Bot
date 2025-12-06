@@ -9,6 +9,7 @@ public class SensorController : MonoBehaviour
     [SerializeField] private SphereCollider searchArea = default;
     [SerializeField] private float serchAngle = 45f;
     [SerializeField] private LayerMask objLayer = default;
+    private Transform player = default;
     private BotController bc = default;
     private AtackMovement am = default;
 
@@ -24,6 +25,7 @@ public class SensorController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            player = other.transform;
             var pos = transform.position; //自身の位置
             var playerDir = other.transform.position - pos;　//自身とPlayerの間の距離
 
@@ -48,14 +50,14 @@ public class SensorController : MonoBehaviour
                         && bc.state == BotController.BotState.Fleemove)
                     {
                         bc.SetState(true);
-                        am.SetAtack(true);
+                        am.SetAtack(true,player);
                     }
                 }
             }
             else if (angle > serchAngle)
             {
                 bc.SetState(false);
-                am.SetAtack(false);
+                am.SetAtack(false,player);
             }
         }
     }
@@ -64,7 +66,7 @@ public class SensorController : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             bc.SetState(false);
-            am.SetAtack(false);
+            am.SetAtack(false, player);
         }
     }
 
