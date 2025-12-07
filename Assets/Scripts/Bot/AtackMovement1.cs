@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.Rendering;
 
-public class AtackMovement : MonoBehaviour
+public class AtackMovement1 : MonoBehaviour
 {
     [Header("移動設定")]
     //----------------------------------------------
@@ -24,6 +24,8 @@ public class AtackMovement : MonoBehaviour
     [SerializeField] private float StrongKnockbackForce = 5.0f;//強パンチノックバック
     private float curentknockbackForce = 0f;//現在のノックバック力
 
+    private float rigidity = 0.5f; //硬直時間
+    private bool isfinish = false;
 
     private Rigidbody rb;
     private bool isTackling = false;
@@ -52,7 +54,7 @@ public class AtackMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       
     }
 
     public void Atack()
@@ -85,6 +87,7 @@ public class AtackMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Atack();
         Move();
 
         if (isStrt)
@@ -103,28 +106,59 @@ public class AtackMovement : MonoBehaviour
         {
             t = 0f;
         }
+        if (isfinish)
+        {
+            if (rigidity > 0)
+            {
+                rigidity -= Time.deltaTime;
+            }
+            if (rigidity <= 0)
+            {
+                isfinish = false;
+                rigidity = 0.5f;
+            }
+        }
     }
     void Move()
     {
-        if(target == null) { return; }
+        if (isfinish) { return; }
+        if (isTackling) { return; }
+        if (target == null) { return; }
         if (isAtacked)
         {
             curentSpeed = speed2;
             curentRotSpeed = rotSpeed2;
+        }
+        else if(!isAtacked)
+        {
+            curentSpeed = speed;
+            curentRotSpeed = rotSpeed;
 
-            Vector3 dir = (target.position - transform.position);
+           /* Vector3 dir = (target.position - transform.position);
             var dire = dir.normalized;
             dir.y = 0f; // 水平にしたいなら残す
 
             rb.MovePosition(rb.position + dire * curentSpeed * Time.deltaTime);
 
             Quaternion rot = Quaternion.LookRotation(dir);
-            rb.MoveRotation(Quaternion.Slerp(transform.rotation, rot, curentRotSpeed * Time.deltaTime));
+            rb.MoveRotation(Quaternion.Slerp(transform.rotation, rot, curentRotSpeed * Time.deltaTime));*/
         }
-      
+
+        Vector3 dir = (target.position - transform.position);
+        var dire = dir.normalized;
+        dir.y = 0f; // 水平にしたいなら残す
+
+        rb.MovePosition(rb.position + dire * curentSpeed * Time.deltaTime);
+
+        Quaternion rot = Quaternion.LookRotation(dir);
+        rb.MoveRotation(Quaternion.Slerp(transform.rotation, rot, curentRotSpeed * Time.deltaTime));
+
+
+
     }//---------------------------------------------
     void Tackle()
     {
+        if (isfinish) { return; }
         isTackling = true;
         lastTackleTime = Time.time;
 
@@ -142,8 +176,10 @@ public class AtackMovement : MonoBehaviour
         isTackling = false;
         // 勢いを止める（急ブレーキ）
         rb.linearVelocity = Vector3.zero;
+
         //ここで硬直処理
-        
+        isfinish = true;
+
         isMax = false;
     }
 
@@ -160,7 +196,9 @@ public class AtackMovement : MonoBehaviour
             {
                 curentknockbackForce = WeakKnockbackForce;
             }
-            Vector3 knockBackDir = collision.transform.position - transform.position;
+            //Vector3 knockBackDir = collision.transform.position - transform.position;
+            Vector3 knockBackDir = transform.forward;
+
             knockBackDir.y = 0f;
             Debug.Log(curentknockbackForce);
             enemyrb.AddForce(knockBackDir.normalized * curentknockbackForce, ForceMode.Impulse);
