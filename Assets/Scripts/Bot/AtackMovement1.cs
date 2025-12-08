@@ -87,8 +87,11 @@ public class AtackMovement1 : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Atack();
-        Move();
+        if (!isfinish)
+        {
+            Atack();
+            Move();
+        }
 
         if (isStrt)
         {
@@ -121,7 +124,7 @@ public class AtackMovement1 : MonoBehaviour
     }
     void Move()
     {
-        if (isfinish) { return; }
+        //if (isfinish) { return; }
         if (isTackling) { return; }
         if (target == null) { return; }
         if (isAtacked)
@@ -158,7 +161,7 @@ public class AtackMovement1 : MonoBehaviour
     }//---------------------------------------------
     void Tackle()
     {
-        if (isfinish) { return; }
+        //if (isfinish) { return; }
         isTackling = true;
         lastTackleTime = Time.time;
 

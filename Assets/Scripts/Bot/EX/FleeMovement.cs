@@ -13,8 +13,11 @@ public class FleeMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    private AtackMovement am;
+
     void Start()
     {
+        am = GetComponent<AtackMovement>();
         points = GameObject.FindGameObjectsWithTag("point");
         rb = GetComponent<Rigidbody>();
         index = Random.Range(0,points.Length);
@@ -40,6 +43,7 @@ public class FleeMovement : MonoBehaviour
 
     public void Move()
     {
+        if (am.isfinish) { return; }
         Vector3 dir = target.transform.position - transform.position;
         //à⁄ìÆópÇ…ê≥ãKâª
         var dire = dir.normalized;

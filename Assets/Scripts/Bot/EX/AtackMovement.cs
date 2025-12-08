@@ -24,6 +24,8 @@ public class AtackMovement : MonoBehaviour
     [SerializeField] private float StrongKnockbackForce = 5.0f;//強パンチノックバック
     private float curentknockbackForce = 0f;//現在のノックバック力
 
+    private float rigidity = 0.5f; //硬直時間
+    public bool isfinish = false;
 
     private Rigidbody rb;
     private bool isTackling = false;
@@ -103,10 +105,23 @@ public class AtackMovement : MonoBehaviour
         {
             t = 0f;
         }
+        if (isfinish)
+        {
+            if (rigidity > 0)
+            {
+                rigidity -= Time.deltaTime;
+            }
+            if (rigidity <= 0)
+            {
+                isfinish = false;
+                rigidity = 0.5f;
+            }
+        }
     }
     void Move()
     {
-        if(target == null) { return; }
+        if (isfinish) { return; }
+        if (target == null) { return; }
         if (isAtacked)
         {
             curentSpeed = speed2;
@@ -132,6 +147,7 @@ public class AtackMovement : MonoBehaviour
     }//---------------------------------------------
     void Tackle()
     {
+        if (isfinish) { return; }
         isTackling = true;
         lastTackleTime = Time.time;
 
@@ -150,7 +166,8 @@ public class AtackMovement : MonoBehaviour
         // 勢いを止める（急ブレーキ）
         rb.linearVelocity = Vector3.zero;
         //ここで硬直処理
-        
+        isfinish = true;
+
         isMax = false;
     }
 
