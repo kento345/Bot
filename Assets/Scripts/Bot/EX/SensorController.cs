@@ -38,20 +38,21 @@ public class SensorController : MonoBehaviour
                 if (!Physics.Linecast(pos + Vector3.up, other.transform.position + Vector3.up, objLayer))
                 {
                     //視野角内にいるかどうか(いた場合の条件近距離)
-                    /* if (Vector3.Distance(other.transform.position, pos) <= searchArea.radius * 0.5f
-                          && Vector3.Distance(other.transform.position, pos) >= searchArea.radius * 0.05f)
-                     {
-                         bc.SetState(true);
-                     }*/
-                   
+                    if (Vector3.Distance(other.transform.position, pos) <= searchArea.radius * 0.5f
+                         && Vector3.Distance(other.transform.position, pos) >= searchArea.radius * 0.05f)
+                    {
+                        bc.SetState(true);
+                        am.SetAtack(true, player);
+                    }
+
 
                     //自由行動中に視野角内と半径内の距離の位置にPlayerがいたら攻撃ステータスへ移行
-                    if (dist <= searchArea.radius && dist >= searchArea.radius * 0.05f
+                   /* if (dist <= searchArea.radius && dist >= searchArea.radius * 0.05f
                         && bc.state == BotController.BotState.Fleemove)
                     {
                         bc.SetState(true);
                         am.SetAtack(true,player);
-                    }
+                    }*/
                 }
             }
             else if (angle > serchAngle)

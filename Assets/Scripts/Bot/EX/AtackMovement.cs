@@ -121,6 +121,7 @@ public class AtackMovement : MonoBehaviour
     void Move()
     {
         if (isfinish) { return; }
+        if (isTackling) { return; }
         if (target == null) { return; }
         if (isAtacked)
         {
@@ -136,13 +137,32 @@ public class AtackMovement : MonoBehaviour
             Quaternion rot = Quaternion.LookRotation(dir);
             rb.MoveRotation(Quaternion.Slerp(transform.rotation, rot, curentRotSpeed * Time.deltaTime));
         }
-        else if(!isAtacked)
+        else if (!isAtacked)
         {
             curentSpeed = speed;
             curentRotSpeed = rotSpeed;
         }
 
-     
+        /*   if (isAtacked)
+           {
+               curentSpeed = speed2;
+               curentRotSpeed = rotSpeed2;
+           }
+         *//*  else if (!isAtacked)
+           {
+               curentSpeed = speed;
+               curentRotSpeed = rotSpeed;
+           }*//*
+
+           Vector3 dir = (target.position - transform.position);
+           var dire = dir.normalized;
+           dir.y = 0f; // êÖïΩÇ…ÇµÇΩÇ¢Ç»ÇÁécÇ∑
+
+           rb.MovePosition(rb.position + dire * curentSpeed * Time.deltaTime);
+
+           Quaternion rot = Quaternion.LookRotation(dir);
+           rb.MoveRotation(Quaternion.Slerp(transform.rotation, rot, curentRotSpeed * Time.deltaTime));*/
+
 
     }//---------------------------------------------
     void Tackle()
