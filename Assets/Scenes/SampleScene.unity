@@ -186,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 41173444}
   - component: {fileID: 41173446}
-  - component: {fileID: 41173445}
+  - component: {fileID: 41173447}
   m_Layer: 0
   m_Name: Sensor
   m_TagString: Untagged
@@ -209,23 +209,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1211972343}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &41173445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 41173443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc3b2fd1c055d6c48bc841ca9f7ca9a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  searchArea: {fileID: 41173446}
-  serchAngle: 45
-  objLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!135 &41173446
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -247,6 +230,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &41173447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41173443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9562224281043bb408be1cc417ce01bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  searchArea: {fileID: 41173446}
+  serchAngle: 45
+  objLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &88230013
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,12 +256,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 88230017}
-  - component: {fileID: 88230015}
-  - component: {fileID: 88230018}
-  - component: {fileID: 88230020}
-  - component: {fileID: 88230019}
   - component: {fileID: 88230016}
   - component: {fileID: 88230014}
+  - component: {fileID: 88230018}
   m_Layer: 0
   m_Name: PlayerBot
   m_TagString: Untagged
@@ -290,20 +287,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &88230015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 88230013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b027768253402204ba01c2ab572c5b44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  isAtack: 0
 --- !u!54 &88230016
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -358,48 +341,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 88230013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdbecd8337989de46b6282ec80aa50f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
---- !u!114 &88230019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 88230013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea3f519f8cf5cd34ca7958e2c93ac19b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MeterImage: {fileID: 154599656}
-  fillSpeed: 1
---- !u!114 &88230020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 88230013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4cbaca89bb77344eafd5618cac3539c, type: 3}
+  m_Script: {fileID: 11500000, guid: a640224a443d03d489c6766357c66dd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
   ChargeMoveSpeedRate: 0.3
   rotSpeed: 10
   ChargeRotateSpeedRate: 0.7
-  tackleForce: 15
-  tackleDuration: 0.5
-  tackleCooldown: 1
-  WeakKnockbackForce: 2.5
-  StrongKnockbackForce: 5
-  isfinish: 0
-  isStrt: 0
-  chargeMax: 5
+  targetList: []
 --- !u!1001 &109556109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -506,17 +455,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 405519186574741329, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}
   m_PrefabInstance: {fileID: 109556109}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &154599656 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8079972058874009157, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}
-  m_PrefabInstance: {fileID: 109556109}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &188756816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -637,14 +575,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 250812225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9562224281043bb408be1cc417ce01bc, type: 3}
+  m_Script: {fileID: 11500000, guid: e09c42183cc01e345ab754a8e15d0362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   searchArea: {fileID: 250812227}
   serchAngle: 45
-  objLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1001 &303268382
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1074,17 +1009,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
---- !u!114 &412062645 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8079972058874009157, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}
-  m_PrefabInstance: {fileID: 1088506509}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &486695658
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,8 +1540,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1211972343}
-  - component: {fileID: 1211972342}
-  - component: {fileID: 1211972341}
+  - component: {fileID: 1211972348}
+  - component: {fileID: 1211972347}
+  - component: {fileID: 1211972346}
+  - component: {fileID: 1211972345}
   - component: {fileID: 1211972340}
   - component: {fileID: 1211972339}
   m_Layer: 0
@@ -1675,43 +1601,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &1211972341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211972338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ad5fdd4fd0c9624ab137263705efc10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MeterImage: {fileID: 412062645}
-  fillSpeed: 1
---- !u!114 &1211972342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211972338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 759bc385b1e5c5546b4c4d6abbba9859, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  ChargeMoveSpeedRate: 0.3
-  rotSpeed: 10
-  ChargeRotateSpeedRate: 0.7
-  tackleForce: 15
-  tackleDuration: 0.5
-  tackleCooldown: 1
-  WeakKnockbackForce: 2.5
-  StrongKnockbackForce: 5
-  isStrt: 0
-  chargeMax: 5
 --- !u!4 &1211972343
 Transform:
   m_ObjectHideFlags: 0
@@ -1730,6 +1619,71 @@ Transform:
   - {fileID: 41173444}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1211972345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211972338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdbecd8337989de46b6282ec80aa50f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+--- !u!114 &1211972346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211972338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3f519f8cf5cd34ca7958e2c93ac19b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MeterImage: {fileID: 1756838191}
+  fillSpeed: 1
+--- !u!114 &1211972347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211972338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b027768253402204ba01c2ab572c5b44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  isAtack: 0
+--- !u!114 &1211972348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211972338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4cbaca89bb77344eafd5618cac3539c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  ChargeMoveSpeedRate: 0.3
+  rotSpeed: 10
+  ChargeRotateSpeedRate: 0.7
+  tackleForce: 15
+  tackleDuration: 0.5
+  tackleCooldown: 1
+  WeakKnockbackForce: 2.5
+  StrongKnockbackForce: 5
+  isfinish: 0
+  isStrt: 0
+  chargeMax: 5
 --- !u!1001 &1369115804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2079,6 +2033,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1756838191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8079972058874009157, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}
+  m_PrefabInstance: {fileID: 1088506509}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1778806460
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2139,8 +2104,7 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2657973930504160728, guid: 749ffd4e92646b145827cb2390cedceb, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
