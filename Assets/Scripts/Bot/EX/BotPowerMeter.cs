@@ -9,32 +9,33 @@ public class BotPowerMeter : MonoBehaviour
     private float meterSpeed = 1.0f;
     private Coroutine meter;
 
-    [SerializeField] private float fillSpeed = 1.0f;
+    [SerializeField] private float MaxChargeTime = 1.5f;
 
-    private AtackMovement am;
+    private PlayerController pc;
 
 
     private void Start()
     {
-        am = GetComponent<AtackMovement>();
+        pc = GetComponent<PlayerController>();
         MeterImage.fillAmount = 0;
     }
 
     private void Update()
     {
-        if(am.isStrt)
+        float speed = 1f / MaxChargeTime;
+        if (pc.isStrt)
         {
-            MeterImage.fillAmount += fillSpeed * Time.deltaTime;
+            MeterImage.fillAmount += speed * Time.deltaTime;
         }
-        else if(!am.isStrt) 
+        else if (!pc.isStrt)
         {
-            MeterImage.fillAmount -= fillSpeed * Time.deltaTime;
+            MeterImage.fillAmount = 0;
         }
 
         // 0〜1 の範囲に制限
         MeterImage.fillAmount = Mathf.Clamp01(MeterImage.fillAmount);
 
-        // Player のタックル力 (t) に反映
-        am.SetChage(MeterImage.fillAmount * am.chargeMax);
+       /* // Player のタックル力 (t) に反映
+        pc.SetCharge(MeterImage.fillAmount * pc.chargeMax);*/
     }
 }
