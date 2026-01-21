@@ -45,9 +45,9 @@ public class PlayerController : MonoBehaviour
 
     private bool isPrese = false; //押されているかフラグ
     [HideInInspector] public bool isStrt = false;//タイマスタートフラグ
-  /*  private float t = 0f; //タイマー
+    private float t = 0f; //タイマー
     public float chargeMax = 5.0f; //タイマー上限
-    private bool isMax = false;//チャージがMaxかのフラグ*/
+    private bool isMax = false;//チャージがMaxかのフラグ
 
 
 
@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
         float mag = inputVer.magnitude;
 
 
-        if (isStrt)
+       /* if (isStrt)
         {
             if (t < chargeMax)
             {
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
         else if (!isStrt)
         {
             t = 0f;
-        }
+        }*/
         if (isfinish)
         {
             if (curentRecoveryTime > 0)
@@ -192,12 +192,12 @@ public class PlayerController : MonoBehaviour
         isTackling = false;
 
         //ここで硬直処理
-        if (isMax)
+      /*  if (isMax)
         {
             isfinish = true;
         }
         box.enabled = false;
-        isMax = false;
+        isMax = false;*/
     }
 
     private void OnTriggerEnter(Collider other)
@@ -205,14 +205,14 @@ public class PlayerController : MonoBehaviour
         Rigidbody enemyrb = other.gameObject.GetComponent<Rigidbody>();
         if (enemyrb != null)
         {
-            if (isMax)
+           /* if (isMax)
             {
                 curentknockbackForce = StrongKnockbackForce;
             }
             else
             {
                 curentknockbackForce = WeakKnockbackForce;
-            }
+            }*/
 
             Vector3 knockBackDir = other.transform.position - transform.position;
             knockBackDir.y = 0.0f; // 垂直ノックバックを付けたくない場合
