@@ -64,7 +64,6 @@ GameObject:
   - component: {fileID: 7978663968900387729}
   - component: {fileID: 6715955012926986980}
   - component: {fileID: 5213086372495097966}
-  - component: {fileID: 5412221961965450190}
   - component: {fileID: 865775605625956557}
   - component: {fileID: 3433632856463206941}
   - component: {fileID: 1754988095366100313}
@@ -143,33 +142,6 @@ CapsuleCollider:
   m_Height: 2.0926647
   m_Direction: 1
   m_Center: {x: 0.000999093, y: 0.039133787, z: 0}
---- !u!114 &5412221961965450190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9045480169321129805}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a640224a443d03d489c6766357c66dd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  ChargeMoveSpeedRate: 0.3
-  rotSpeed: 10
-  ChargeRotateSpeedRate: 0.7
-  tackleForce: 0
-  tackleDuration: 0.5
-  tackleCooldown: 1
-  StrongRecoveryTime: 1
-  WeakKnockbackForce: 2.5
-  StrongKnockbackForce: 5
-  isStrt: 0
-  chargeMax: 5
-  searchArea: {fileID: 6879637220458561274}
-  angle: 45
-  IDtext: {fileID: 3988662341182184928}
 --- !u!114 &865775605625956557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,9 +195,14 @@ MonoBehaviour:
   chargeMax: 5
   WeakKnockbackForce: 2.5
   StrongKnockbackForce: 5
-  searchArea: {fileID: 0}
+  searchInterval: 0.5
+  searchRange: 15
+  stageCenter: {x: 0, y: 0, z: 0}
+  stageRadius: 20
+  searchArea: {fileID: 6879637220458561274}
   angle: 45
   players: []
+  outPlayers: []
   target: {fileID: 0}
 --- !u!1001 &4526858894017346545
 PrefabInstance:
@@ -328,17 +305,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}
---- !u!114 &3988662341182184928 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 686853275334272529, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}
-  m_PrefabInstance: {fileID: 4526858894017346545}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4283507787446367392 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 405519186574741329, guid: ff2c6d6a66488d147bc5d35516752fab, type: 3}

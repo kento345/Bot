@@ -1,10 +1,12 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class BotPlayerController : MonoBehaviour
 {
+
     [Header("移動設定")]
 
     [SerializeField] private float speed = 5.0f; //移動スピード
@@ -26,12 +28,16 @@ public class BotPlayerController : MonoBehaviour
     [SerializeField] private float StrongRecoveryTime = 1.0f; //硬直時間
     private float curentRecoveryTime;
     private bool isfinish = false;
+    private float r;
 
-    private bool isPrese = false;                 //攻撃キー入力フラグ
+    private bool isPrese = false; //攻撃キー入力フラグ
     [HideInInspector] public bool isStrt = false;//チャージ開始フラグ
-    private float t = 0f;                        //チャージ量
-    public float chargeMax = 5.0f;               //チャージ上限
-    private bool isMax = false;                  //チャージがMaxかのフラグ
+    private float t = 0f; //チャージ量
+    [HideInInspector] public float chargeMax = 5.0f; //チャージ上限
+    private bool isMax = false;//チャージがMaxかのフラグ
+
+    bool isAttack1 = false;
+    bool isAttack2 = false;
 
     [Header("ノックバック,無敵設定")]
     [SerializeField] private float WeakKnockbackForce = 2.5f; //弱ブリンクノックバック
@@ -43,8 +49,21 @@ public class BotPlayerController : MonoBehaviour
     private bool isTackling = false;
     private float lastTackleTime = 0f; // 最後のタックル時間
 
+    [Header("サーチ設定")]
+    [SerializeField] private float searchInterval = 0.5f;
+    [SerializeField] private float searchRange = 15f;
 
-  
+    private float searchTimer = 0f;
+
+    //-------------------------------------
+    [Header("ステージ範囲")]
+    //四角形
+    /* [SerializeField] private Vector3 stageMin; // ステージの最小座標
+     [SerializeField] private Vector3 stageMax; // ステージの最大座標*/
+    //円形
+    [SerializeField] private Vector3 stageCenter; // ステージ中心
+    [SerializeField] private float stageRadius = 20f; // ステージ半径
+    //-------------------------------------
 
     [Header("当たり判定設定")]
     [SerializeField] private SphereCollider searchArea;
@@ -52,62 +71,108 @@ public class BotPlayerController : MonoBehaviour
 
     //-----その他-----
     public List<GameObject> players = new List<GameObject>();  //Player達
+    public List<GameObject> outPlayers = new List<GameObject>();  //場外Player達
     private float minDistance = Mathf.Infinity; //最短距離をだすための目安値
 
     public GameObject target;       //攻撃対象
     private float distance;          //攻撃対象との距離
 
-    private void Awake()
+    Reception reception;
+    Animator animator;
+
+
+    void Awake()
     {
         speed2 = speed * ChargeMoveSpeedRate;
         rotSpeed2 = rotSpeed * ChargeRotateSpeedRate;
-        //curentRecoveryTime = StrongRecoveryTime;
+        curentRecoveryTime = StrongRecoveryTime;
     }
+
+    public void SetCharge(float value)
+    {
+        t = value;
+    }
+
     void Start()
     {
-      rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
+        reception = GetComponent<Reception>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Listに自身以外のPlayerを追加
-        players.Clear();
-        minDistance = Mathf.Infinity;
-        target = null;
-
-
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        searchTimer += Time.deltaTime;
+        if (searchTimer >= searchInterval)
         {
-            if (obj != this.gameObject)
-            {
-                players.Add(obj);
+            CollectPlayers();
+            SearchTarget();
+            searchTimer = 0f;
+        }
+        if (target == null) return;
 
-                float dist = (transform.position - obj.transform.position).sqrMagnitude;
-                if (dist < minDistance)
-                {
-                    minDistance = dist;
-                    target = obj;
-                }
-            }
-
-           
+        // ステージ外チェック
+        if (IsOutOfStage(transform.position) || IsOutOfStage(target.transform.position))
+        {
+            ResetTarget();
+            return;
         }
 
-        if (target != null)
+        distance = Vector3.Distance(transform.position, target.transform.position);
+
+        if (distance > 5f)
         {
             Move();
         }
 
-        distance = Vector3.Distance(this.transform.position, target.transform.position);
-        // 一定の範囲内に入ったら実行
-        if (distance < 15f)
+        if (distance < 15f /*&& distance > r*/)
         {
-            Atack();
+            if (IsOutOfStage(target.transform.position))
+            {
+                ResetTarget();
+            }
+            Atack(true);
         }
 
-    }
+        if (distance < r)
+        {
+            Atack(false);
+        }
 
+        if (isStrt)
+        {
+            t += Time.deltaTime;
+
+            if (t >= chargeMax)
+            {
+                t = chargeMax;
+                isMax = true;
+            }
+        }
+        else
+        {
+            t = 0f;
+            isMax = false;
+        }
+        if (isfinish)
+        {
+            if (curentRecoveryTime > 0)
+            {
+                curentRecoveryTime -= Time.deltaTime;
+            }
+            if (curentRecoveryTime <= 0)
+            {
+                isfinish = false;
+                curentRecoveryTime = StrongRecoveryTime;
+            }
+        }
+        float mag = rb.linearVelocity.magnitude;
+        animator.SetFloat("Speed", mag);
+        animator.SetBool("IsChage", isStrt);
+        animator.SetBool("isAttack1", isAttack1);
+        animator.SetBool("isAttack2", isAttack2);
+    }
     void Move()
     {
         if (isPrese)
@@ -144,7 +209,12 @@ public class BotPlayerController : MonoBehaviour
 
             if (!isTackling && Time.time > lastTackleTime + tackleCooldown)
             {
-                isStrt = true;
+                if (!isStrt)
+                {
+                    r = Random.Range(5f, 10f);
+                    isStrt = true;
+                }
+
                 isPrese = true;
             }
         }
@@ -161,13 +231,24 @@ public class BotPlayerController : MonoBehaviour
     void Tackle()
     {
         if (isfinish) { return; }
+        if (reception != null && reception.isKnockback) return;
         isTackling = true;
         lastTackleTime = Time.time;
+
+        if (isMax)
+        {
+            curentknockbackForce = StrongKnockbackForce;
+            isAttack2 = true;
+        }
+        else
+        {
+            curentknockbackForce = WeakKnockbackForce;
+            isAttack1 = true;
+        }
 
         rb.AddForce(transform.forward * tackleForce, ForceMode.Impulse);
 
         Invoke("EndTackle", tackleDuration);
-
     }
     void EndTackle()
     {
@@ -181,5 +262,149 @@ public class BotPlayerController : MonoBehaviour
         }
 
         isMax = false;
+        isAttack1 = false;
+        isAttack2 = false;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Vector3 posDir = other.transform.position - this.transform.position;
+            float target_angle = Vector3.Angle(this.transform.forward, posDir);
+
+            var dist = Vector3.Distance(other.transform.position, transform.position);
+
+            if (target_angle > angle) { return; }
+
+            if (target_angle <= angle)
+            {
+                if (Physics.Raycast(this.transform.position + Vector3.up * 0.5f, posDir, out RaycastHit hit))
+                {
+                    if (hit.collider == other)
+                    {
+                        if (isTackling)
+                        {
+                            Reception p = other.gameObject.GetComponent<Reception>();
+                            if (p.isHit) { return; }
+                            p.KnockBack(rb.linearVelocity.normalized, curentknockbackForce);
+
+                            //当たった時点でInvokeをキャンセルしてタックルを止める
+                            CancelInvoke("EndTackle");
+                            EndTackle();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        var pos = transform.position;
+        pos.y = 1.0f;
+        Handles.color = Color.red;
+        Handles.DrawSolidArc(pos, Vector3.up, Quaternion.Euler(0.0f, -angle, 0f) * transform.forward, angle * 2f, searchArea.radius);
+
+        // ===== ステージ範囲（追加） =====
+        Handles.color = Color.green;
+
+        Vector3 center = stageCenter;
+        center.y = 0f; // XZ平面に固定
+
+        // 円の外枠
+        Handles.DrawWireDisc(center, Vector3.up, stageRadius);
+
+        // 中心点
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(center, 0.3f);
+    }
+#endif
+
+    void CollectPlayers()
+    {
+        players.Clear();
+
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            if (obj == gameObject) continue; // 自分は除外
+            if (IsOutOfStage(obj.transform.position))
+            {
+                // ステージ外のプレイヤーはoutPlayersに追加
+                if (!outPlayers.Contains(obj))
+                    outPlayers.Add(obj);
+            }
+            else
+            {
+                players.Add(obj);
+            }
+        }
+    }
+
+    void SearchTarget()
+    {
+        //if (isTackling || isStrt) return;
+
+        target = null;
+        minDistance = Mathf.Infinity;
+
+        foreach (GameObject obj in players)
+        {
+            if (obj == null) continue;
+
+            float dist = Vector3.Distance(transform.position, obj.transform.position);
+            if (dist > searchRange) continue;
+
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                target = obj;
+            }
+        }
+
+        // targetがステージ外に出た場合はリセットしてoutPlayersに追加
+        if (target != null && IsOutOfStage(target.transform.position))
+        {
+            if (!outPlayers.Contains(target))
+                outPlayers.Add(target);
+            target = null;
+        }
+    }
+    //-------------------------------------
+
+    bool IsOutOfStage(Vector3 pos)
+    {
+        /* // x,z がすべて範囲内かチェック
+         if (pos.x < stageMin.x || pos.x > stageMax.x) return true;
+         if (pos.z < stageMin.z || pos.z > stageMax.z) return true;
+
+         return false; // 全部範囲内ならステージ内*/
+
+        // Yは無視してXZ平面だけで判定
+        //Vector3 centerXZ = new Vector3(stageCenter.x, 0f, stageCenter.z);
+        Vector3 posXZ = new Vector3(pos.x, 0f, pos.z);
+
+        float distance = Vector3.Distance(stageCenter, posXZ);
+
+        return distance > stageRadius;
+    }
+    //-------------------------------------
+
+    void ResetTarget()
+    {
+        target = null;
+
+        isStrt = false;
+        isPrese = false;
+        isMax = false;
+        t = 0f;
+        r = 0f;
+
+        isAttack1 = false;
+        isAttack2 = false;
+
+        CancelInvoke(nameof(EndTackle));
+        isTackling = false;
     }
 }
